@@ -1,0 +1,114 @@
+#SECTION 1: system_logs.csv — System Events
+#Command 1: #Total number of system log events recorded.
+
+user@pop-os:~$ wc -l system_logs.csv
+8 system_logs.csv
+
+#Command 2: #Distribution of log levels.
+user@pop-os:~$ cut -d',' -f2 system_logs.csv | grep -E "INFO|ERROR|WARNING" | sort |
+uniq -c
+1 ERROR
+4 INFO
+2 WARNING
+
+#Command 3: #Most commonly occurring system message
+user@pop-os:~$ cut -d',' -f3- system_logs.csv | sort | uniq -c | sort -nr | head -1
+1 User: kajal logged out
+
+#Command 4: #Who was most active in the system logs
+user@pop-os:~$ cut -d',' -f3 system_logs.csv | grep -oE 'User: [a-z]+' | sort | uniq -c
+1 User: ankit
+2 User: kajal
+
+#Command 5: #Total number of critical system issues.
+user@pop-os:~$ grep "ERROR" system_logs.csv | wc -l
+2
+
+#Command 6: #Overall error rate
+user@pop-os:~$ awk -F',' '{tot++; if($2=="ERROR") err++} END{printf "Error rate:
+%.2f%%\n", (err/tot)*100}' system_logs.csv
+Error rate: 12.50%
+
+
+#SECTION 2: user_scores.csv — Student Performance
+#Command 1: #Number of users evaluated
+user@pop-os:~$ wc -l user_scores.csv
+3 user_scores.csv
+
+#Command 2: #General academic performance
+user@pop-os:~$ awk -F',' '{sum += $4} END {print "Average Score:", sum/NR}'
+user_scores.csv
+Average Score: 84.6667
+
+#Command 3: #Student with the highest score.
+user@pop-os:~$ sort -t',' -k4 -nr user_scores.csv | head -1
+102,Ankit Sharma,CS,92
+Command 4: #How many students per department
+user@pop-os:~$ cut -d',' -f3 user_scores.csv | sort | uniq -c
+1 CS
+2 IT
+
+#Command 5: #Department-wise Average Score (using a loop!)
+user@pop-os:~$ for dept in $(cut -d',' -f3 user_scores.csv | sort | uniq); do
+avg=$(awk -F',' -v d="$dept" '$3 == d {sum += $4; count++} END {if (count > 0) print
+sum/count}' user_scores.csv)
+echo "$dept department average score: $avg"
+done
+CS department average score: 92
+IT department average score: 81
+
+#Command 6: #Students with Same Department (Group Listing)
+user@pop-os:~$ for dept in $(cut -d',' -f3 user_scores.csv | sort | uniq); do
+echo "$dept department:"
+awk -F',' -v d="$dept" '$3 == d {print " - " $2}' user_scores.csv
+done
+CS department:
+- Ankit Sharma
+IT department:
+- Kajal Ranka
+- Rhea Kapoor
+
+
+#SECTION 3: temperature_readings.csv — Sensor Trends
+#Command 1: #Max and Min Temperature Recorded
+user@pop-os:~$ cut -d',' -f2 temperature_readings.csv | sort -n | awk 'NR==1{print "Min
+Temp:", $1} END{print "Max Temp:", $1}'
+Min Temp: 35
+Max Temp: 37
+
+#Command 2: #Average Temperature
+user@pop-os:~$ awk -F',' '{sum += $2} END {print "Average Temperature:", sum/NR}'
+temperature_readings.csv
+Average Temperature: 36
+
+#Command 3: #Time at Which Temperature Was Highest
+user@pop-os:~$ sort -t',' -k2 -nr temperature_readings.csv | head -1
+2025-07-01 14:00,37
+
+#Command 4: #Time at Which Temperature Was Lowest
+user@pop-os:~$ sort -t',' -k2 -n temperature_readings.csv | head -1
+2025-07-01 13:00,35
+
+#Command 5: #Detect Sudden Temperature Spikes
+user@pop-os:~$ awk -F',' '
+NR==1 {prev=$2; prev_time=$1; next}
+{
+diff = $2 - prev
+if (diff >= 2) {
+print "Spike of", diff, "°C at", $1, "(from", prev_time ")"
+}
+prev=$2
+prev_time=$1
+}' temperature_readings.csv
+Spike of 2 °C at 2025-07-01 14:00 (from 2025-07-01 13:00)
+
+#Command 6: #Whether the temperature is going up, down, or flat over time.
+user@pop-os:~$ awk -F',' '
+NR==1 {prev=$2; next}
+{
+if ($2 > prev) print $1": Increasing"
+else if ($2 < prev) print $1": Decreasing"
+else print $1": Stable"
+prev=$2
+}' temperature_readings.csv
+2025-07-01 14:00: Increasing
