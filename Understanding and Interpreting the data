@@ -1,0 +1,62 @@
+#Step 1 : Understanding and Interpreting the data
+#Command 1: #shows the first few lines of the file to spot the patterns
+head unstructured_log_data.txt
+2025-07-01 12:01:22 INFO User: kajal logged in
+2025-07-01 12:01:25 ERROR Disk full on /dev/sda1
+2025-07-01 12:01:30 WARNING CPU usage high: 95%
+UserID: 101, Name: Kajal Ranka, Dept: IT, Score: 88
+Temperature reading: 35C at 2025-07-01 13:00
+2025-07-01 13:15:00 INFO User: ankit uploaded a file
+2025-07-01 13:16:22 INFO User: kajal logged out
+UserID: 102, Name: Ankit Sharma, Dept: CS, Score: 92
+Garbage line that doesn't belong here!!!
+
+#Command 2: #Tells how many lines we are dealing with.
+user@pop-os:~$ wc -l unstructured_log_data.txt
+15 unstructured_log_data.txt
+
+#Command 3: #To View unique line formats
+user@pop-os:~$ awk '{print $1}' unstructured_log_data.txt | sort | uniq -c
+1
+7 2025-07-01
+1 ERROR:
+1 Garbage
+2 Temperature
+3 UserID:
+
+#Command 4: #Grep for Keywords (aka Bucketing Lines)
+user@pop-os:~$ grep "INFO" unstructured_log_data.txt
+grep "ERROR" unstructured_log_data.txt
+grep "WARNING" unstructured_log_data.txt
+grep "UserID" unstructured_log_data.txt
+grep "Temperature" unstructured_log_data.txt
+2025-07-01 12:01:22 INFO User: kajal logged in
+2025-07-01 13:15:00 INFO User: ankit uploaded a file
+2025-07-01 13:16:22 INFO User: kajal logged out
+2025-07-01 15:00:00 INFO System health OK
+2025-07-01 12:01:25 ERROR Disk full on /dev/sda1
+ERROR: Failed to start service X
+2025-07-01 12:01:30 WARNING CPU usage high: 95%
+2025-07-01 13:30:00 WARNING Memory usage above 90%
+UserID: 101, Name: Kajal Ranka, Dept: IT, Score: 88
+UserID: 102, Name: Ankit Sharma, Dept: CS, Score: 92
+UserID: 103, Name: Rhea Kapoor, Dept: IT, Score: 74
+Temperature reading: 35C at 2025-07-01 13:00
+Temperature reading: 37C at 2025-07-01 14:00
+
+#Command 5: #Check for Garbage or Inconsistencies
+user@pop-os:~$ grep -vE "INFO|ERROR|WARNING|UserID|Temperature|Score|logged"
+unstructured_log_data.txt
+Garbage line that doesn't belong here!!!
+Initial Observations:
+- The file contains a mix of structured and unstructured logs.
+- Entries can be categorized into:
+- System Logs (INFO, WARNING, ERROR)
+- User Score Data
+- Sensor Readings (Temperature)
+- Junk/Malformed lines
+- The data is timestamped, allowing chronological analysis.
+- Some entries are clean and follow a pattern, while others are noisy.
+Assumption:
+- We can filter and structure the logs based on keywords and patterns using shell tools.
+S
