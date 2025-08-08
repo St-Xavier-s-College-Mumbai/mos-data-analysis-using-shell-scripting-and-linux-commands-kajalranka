@@ -1,0 +1,39 @@
+#Spliting the data into 3 clean files:
+#● system_logs.csv – for INFO / ERROR / WARNING
+#● user_scores.csv – for user details like name, dept, score
+#● temperature_readings.csv – for temperature sensor logs
+#Also discarding junk lines that don’t match anything useful.
+
+
+#Command 1: #Opening a new nano file
+user@pop-os:~$ nano clean_data.sh
+Shell Script for Cleaning and Preprocessing
+#!/bin/bash
+INPUT="unstructured_log_data.txt"
+# Clean System Logs
+grep -E "INFO|ERROR|WARNING" "$INPUT" | \
+awk '{timestamp=$1" "$2; level=$3; $1=""; $2=""; $3=""; message=substr($0,2); print
+timestamp","level","message}' \
+> system_logs.csv
+
+# Clean User Scores
+grep "UserID" "$INPUT" | \
+sed 's/UserID: //; s/, Name: /,/; s/, Dept: /,/; s/, Score: /,/' \
+> user_scores.csv
+
+# Clean Temperature Readings
+grep "Temperature reading" "$INPUT" | \
+sed -E 's/Temperature reading: ([0-9]+)C at ([0-9:-]+ [0-9:]+)/\2,\1/' \
+> temperature_readings.csv
+
+# Optional: Remove malformed/junk lines
+echo "Junk lines:"
+grep -vE "INFO|ERROR|WARNING|UserID|Temperature" "$INPUT"
+
+#Command 2: #Giving Permission to the file to run
+user@pop-os:~$ chmod +x clean_data.sh
+
+#Command 3: #Running the file
+user@pop-os:~$ ./clean_data.sh
+Junk lines:
+Garbage line that doesn't belong here!!!
