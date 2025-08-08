@@ -1,0 +1,318 @@
+#SECTION 1: system_logs.csv — System Events
+#1. Visualizing Total number of system log events vs Error
+#● Creating data file
+cat <<EOF > total_vs_errors.dat
+Total_Logs 8
+Errors 1
+EOF
+#● Gnuplot Script
+cat <<EOF > plot_total_vs_errors.gp
+set terminal png size 800,600
+set output 'total_vs_errors.png'
+set title "Total Logs vs Errors"
+set style data histograms
+set style fill solid
+set ylabel "Count"
+plot 'total_vs_errors.dat' using 2:xtic(1) title ''
+EOF
+#● Running it
+gnuplot plot_total_vs_errors.gp
+
+
+#2. Visualizing Distribution of log levels
+#● Creating the data file
+cat <<EOF > log_levels.dat
+INFO 4
+ERROR 1
+WARNING 2
+EOF
+#● Gnuplot script (bar chart)
+cat <<EOF > plot_log_levels.gp
+set terminal png size 800,600
+set output 'log_levels.png'
+set title "Log Level Distribution"
+set style data histograms
+set style fill solid
+set ylabel "Count"
+set xlabel "Log Level"
+plot 'log_levels.dat' using 2:xtic(1) title ''
+EOF
+#● Running it
+gnuplot plot_log_levels.gp
+
+
+#3. Visualizing Most Active User in System Logs
+#● Creating the data file
+cat <<EOF > user_activity.dat
+kajal 2
+ankit 1
+EOF
+#● Gnuplot Script
+cat <<EOF > plot_user_activity.gp
+set terminal png size 800,600
+set output 'user_activity.png'
+set title "User Activity in System Logs"
+set style data histograms
+set style fill solid
+set ylabel "Number of Logs"
+set xlabel "User"
+plot 'user_activity.dat' using 2:xtic(1) title ''
+EOF
+#● Running It
+gnuplot plot_user_activity.gp
+
+
+#4. Visualizing Error Rate
+#● Creating Data File
+nano error_rate.dat
+Type Count
+Error 2
+Non-Error 14
+#● Gnuplot script to draw a bar chart
+nano error_rate_plot.gp
+set terminal pngcairo size 800,600 enhanced font 'Verdana,10'
+set output 'error_rate_bar_chart.png'
+set title "System Log: Error vs Non-Error Events"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set ylabel "Number of Events"
+set xlabel "Event Type"
+set xtics rotate by -45
+plot 'error_rate.dat' using 2:xtic(1) title ''
+#● Running It
+gnuplot error_rate_plot.gp
+
+
+
+#SECTION 2: user_scores.csv — Student Performance
+#1. Visualizing Number of Users Evaluated
+#● Creating Data File
+nano user_count.dat
+Users 3
+#● Gnuplot script to draw a bar chart
+nano error_rate_plot.gp
+set terminal pngcairo size 800,600 enhanced font 'Verdana,10'
+set output 'user_count_bar_chart.png'
+set title "Number of Users Evaluated"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set ylabel "User Count"
+set yrange [0:5] # Set a manual range so the bar doesn't look weird
+set xlabel " "
+plot 'user_count.dat' using 2:xtic(1) title ''
+#● Running It
+gnuplot error_rate_plot.gp
+
+
+#2. Visualizing General Academic Performance (Bar for Avg Score)
+● Creating Data File
+nano avg_score.dat
+Average 84.67
+#● Gnuplot script to draw a bar chart
+nano avg_score_plot.gp
+set terminal pngcairo size 800,600 enhanced font 'Verdana,10'
+set output 'avg_score_bar_chart.png'
+set title "Average Score of Students"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set ylabel "Average Score"
+set yrange [0:100] # Adjust depending on how dramatic you want it to look
+set xlabel " "
+plot 'avg_score.dat' using 2:xtic(1) title ''
+#● Running It
+gnuplot avg_score_plot.gp
+
+
+3. Visualizing Student with the Highest Score
+#● Creating Data File
+nano top_student.dat
+"Ankit Sharma" 92
+#● Gnuplot script to draw a bar chart
+nano top_student_plot.gp
+set terminal pngcairo size 800,600 enhanced font 'Verdana,10'
+set output 'top_student_bar_chart.png'
+set title "Top Scoring Student"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set ylabel "Score"
+set yrange [0:100] # or [85:95] if you want it tighter
+set xlabel "Student"
+plot 'top_student.dat' using 2:xtic(1) title ''
+#● Running It
+gnuplot top_student_plot.gp
+
+
+#4. Visualizing Students per Department
+#● Creating Data File
+nano dept_count.dat
+CS 1
+IT 2
+#● Gnuplot script to draw a bar chart
+nano dept_count_plot.gp
+set terminal pngcairo size 700,400 enhanced font 'Verdana,10'
+set output 'dept_count_bar.png'
+set title "Students per Department"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set ylabel "Number of Students"
+set xlabel "Department"
+plot 'dept_count.dat' using 2:xtic(1) notitle
+#● Running It
+gnuplot dept_count_plot.gp
+
+
+#5. Visualizing Department-wise Average Score
+#● Creating Data File
+nano nano dept_avg_score.dat
+CS 92
+IT 81
+#● Gnuplot script to draw a bar chart
+nano dept_avg_score_plot.gp
+set terminal pngcairo size 700,400 enhanced font 'Verdana,10'
+set output 'dept_avg_score_bar.png'
+set title "Department-wise Average Score"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set ylabel "Average Score"
+set xlabel "Department"
+plot 'dept_avg_score.dat' using 2:xtic(1) notitle
+#● Running It
+gnuplot dept_avg_score_plot.gp
+
+
+#6. Visualizing Students with Same Department
+#● Creating Data File
+nano dept_students_grouped.dat
+CS "Ankit Sharma" 1
+IT "Kajal Ranka" 1
+IT "Rhea Kapoor" 1
+#● Gnuplot script to draw a bar chart
+nano dept_students_plot.gp
+set terminal pngcairo size 800,600 enhanced font 'Verdana,10'
+set output 'dept_students_chart.png'
+set title "Number of Students by Department"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set ylabel "Number of Students"
+set xlabel "Department"
+plot 'dept_students_summary.dat' using 2:xtic(1) title ''
+#● Running It
+gnuplot dept_students_plot.gp
+SECTION 3: temperature_readings.csv — Sensor Trends
+
+
+#1. Visualizing Max vs Min Temperature
+#● Creating Data File
+nano temp_range.dat
+Min 35
+Max 37
+#● Gnuplot script to draw a bar chart
+nano temp_range_plot.gp
+set terminal pngcairo size 800,600 enhanced font 'Verdana,10'
+set output 'temp_range_bar.png'
+set title "Min vs Max Temperature"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set ylabel "Temperature (°C)"
+set xlabel "Category"
+set yrange [0:40]
+plot 'temp_range.dat' using 2:xtic(1) title ''
+#● Running It
+gnuplot temp_range_plot.gp
+
+
+#2. Visualizing Average Temperature
+#● Creating Data File
+nano avg_temp.dat
+Average 36
+#● Gnuplot script to draw a bar chart
+nano avg_temp_plot.gp
+set terminal pngcairo size 800,600 enhanced font 'Verdana,10'
+set output 'avg_temp_bar.png'
+set title "Average Temperature Reading"
+set style data histograms
+set style fill solid 1.0 border -1
+set boxwidth 0.5
+set yrange [0:40]
+set ylabel "Temperature (°C)"
+plot 'avg_temp.dat' using 2:xtic(1) title ''
+#● Running It
+gnuplot avg_temp_plot.gp
+
+
+#3. Visualizing Highest & Lowest Temp Times (as labels)
+#● Creating Data File
+nano temp_extremes_times.dat
+2025-07-01 13:00 35
+2025-07-01 14:00 37
+#● Gnuplot script to draw a plot as points with labels
+nano temp_extremes_plot.gp
+set terminal pngcairo size 1000,600 enhanced font 'Verdana,10'
+set output 'temp_extremes_times.png'
+set title "Temperature Extremes by Time"
+set xdata time
+set timefmt "%Y-%m-%d %H:%M"
+set format x "%H:%M"
+set xlabel "Time"
+set ylabel "Temperature (°C)"
+set grid
+plot 'temp_extremes_times.dat' using 1:3 with points pt 7 ps 1.5 lc rgb "red" title
+'Temps', \
+'' using 1:3:2 with labels offset char 1,1 notitle
+#● Running It
+gnuplot temp_extremes_plot.gp
+
+
+#4. Visualizing Sudden Temperature Spike
+#● Creating Data File
+nano temp_spike.dat
+2025-07-01 13:00 35
+2025-07-01 14:00 37
+#● Gnuplot script to draw a Line Chart
+nano temp_spike_plot.gp
+set terminal pngcairo size 1000,600 enhanced font 'Verdana,10'
+set output 'temp_spike_chart.png'
+set title "Sudden Temperature Spike"
+set xdata time
+set timefmt "%Y-%m-%d %H:%M"
+set format x "%H:%M"
+set xlabel "Time"
+set ylabel "Temperature (°C)"
+set grid
+plot 'temp_spike.dat' using 1:3 with linespoints lt rgb "orange" lw 2 pt 7 ps 1.5 title
+'Temp Readings'
+#● Running It
+gnuplot temp_spike_plot.gp
+
+
+#5. Visualizing Sudden Temperature Spike
+#● Creating Direction Data File
+nano temp_trend.dat
+2025-07-01 14:00 Increasing
+nano temp_trend_numeric.dat
+2025-07-01 13:00 0
+2025-07-01 14:00 1
+#● Gnuplot script to draw a Line Chart
+nano temp_trend_plot.gp
+set terminal pngcairo size 1000,600 enhanced font 'Verdana,10'
+set output 'temp_trend_plot.png'
+set title "Temperature Trend Direction"
+set xdata time
+set timefmt "%Y-%m-%d %H:%M"
+set format x "%H:%M"
+set xlabel "Time"
+set ylabel "Direction"
+set yrange [-2:2]
+set ytics ("Decreasing" -1, "Stable" 0, "Increasing" 1)
+set grid
+plot 'temp_trend_numeric.dat' using 1:2 with impulses lc rgb "blue" lw 2 title 'Trend'
+#● Running It
+gnuplot temp_trend_plot.gp
